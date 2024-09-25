@@ -1,0 +1,44 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  tokens    Token?
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Token {
+  chain         String
+  createdAt     DateTime          @default(now())
+  createdBy     User?             @relation(fields: [created_by], references: [id])
+  created_by    String?           @unique
+  description   String?
+  id            String            @id @default(cuid())
+  initialPrice  Float
+  quantity      Int
+  socials       EnumTokenSocials?
+  symbolField   String
+  token_name    String
+  updatedAt     DateTime          @updatedAt
+  walletAddress String
+}
+
+enum EnumTokenSocials {
+  Twitter
+  Telegram
+  Website
+  Discord
+}
